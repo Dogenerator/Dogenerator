@@ -1,0 +1,8 @@
+build
+node_modules
+.vscode
+accounts.json
+config.json
+testConfig.json
+package-lock.json
+interact/addresses.json
