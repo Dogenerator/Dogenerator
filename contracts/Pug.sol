@@ -79,9 +79,9 @@ contract Pug is ERC20PresetMinterPauser, Ownable {
         lastRewardTime = block.timestamp;
         renounceRole(MINTER_ROLE, msg.sender);
 
-        IERC20(_baseToken).approve(sushiRouter, INFINITY);
         sushiRouter = _sushiRouter;
         WETH = _WETH;
+        IERC20(_baseToken).approve(_sushiRouter, INFINITY);
     }
 
     function decimals() public view virtual override returns (uint8) {

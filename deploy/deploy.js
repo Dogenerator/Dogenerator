@@ -29,7 +29,7 @@ async function deploy(web3, config) {
             PugToken.options.address,
             config.factory.pugCreationReward,
             config.factory.fee,
-            config.factory.rewardsPerBlock,
+            config.factory.rewardsPerSecond,
             zeroAddress,
             config.sushi.factory,
             config.sushi.router,
