@@ -6,6 +6,8 @@ const PugCompiled = require("../build/contracts/Pug.json");
 const PugFactoryCompiled = require("../build/contracts/PugFactory.json");
 const PugStakingCompiled = require("../build/contracts/PugStaking.json");
 const PugTokenCompiled = require("../build/contracts/PugToken.json");
+const ERC20Compiled = require("../build/contracts/ERC20.json");
+const SushiRouterCompiled = require("../build/contracts/SushiRouter.json");
 
 const zeroAddress = "0x0000000000000000000000000000000000000000";
 
@@ -20,6 +22,25 @@ async function deploy(web3, config) {
     }).send({
         from: config.token.admin,
         gas: 6000000
+    });
+
+    await PugToken.methods.approve(config.sushi.router, web3.utils.toWei("1000000")).send({
+        from: config.token.admin,
+        gas: 6000000
+    });
+    const sushiRouter = new web3.eth.Contract(SushiRouterCompiled.abi, config.sushi.router);
+    await sushiRouter.methods.addLiquidityETH(
+        PugToken.options.address,
+        web3.utils.toWei("10000"),
+        100000,
+        100,
+        config.token.admin,
+        Date.now() + 100000
+    ).send({
+        from: config.token.admin,
+        value: web3.utils.toWei("1", "gwei"),
+        gas: 6000000
+
     });
 
     const PugFactory = await PugFactorySkeleton.deploy({
@@ -62,12 +83,17 @@ async function deploy(web3, config) {
     });
 
     const contracts = {
-        pugToken: PugToken.options.address,
-        pugFactory: PugFactory.options.address,
-        pugStaking: PugStaking.options.address
+        pugToken: PugToken,
+        pugFactory: PugFactory,
+        pugStaking: PugStaking,
+        web3
     };
 
-    console.table(contracts)
+    console.table({
+        pugToken: PugToken.options.address,
+        pugFactory: PugFactory.options.address,
+        pugStaking: PugStaking.options.address,
+    })
     return contracts;
 }
 

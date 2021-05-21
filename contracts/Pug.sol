@@ -136,7 +136,7 @@ contract Pug is ERC20PresetMinterPauser, Ownable {
     }
 
     function swapForPugAndSend(uint256 _fee, address _to) internal returns(uint256) {
-        address[] memory path;
+        address[] memory path  = new address[](3);
         path[0]= baseToken;
         path[1] = WETH;
         path[2] = pugToken;
